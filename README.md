@@ -6,6 +6,12 @@ A Python Virtual Assistant Project
 - git
 
 
+### Clone repository
+```
+git clone https://github.com/georgie105/VirtualAssistantAvator.git
+```
+
+
 ### Setup a virtual environment
 The Virtual environment is useful for isolating your project files such that any pip3 installations
 are only installed to the project and not globally to your computer.
