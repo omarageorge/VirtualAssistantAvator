@@ -11,7 +11,7 @@ A Python Virtual Assistant Project
 ### Setup a virtual environment
 The Virtual environment is useful for isolating your project files such that any pip3 installations
 are only installed to the project and not globally to your computer.
-`python3 -m venv venv`
+```python3 -m venv venv```
 
 
 ### Library Installations
