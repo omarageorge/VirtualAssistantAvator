@@ -6,6 +6,6 @@ A Python Virtual Assistant Project
 - SpeechRecognition
 
 
-### Installations
-#### Install SpeechRecognition
+### Library Installations
+Install SpeechRecognition
 `python -m speech_recognition`
