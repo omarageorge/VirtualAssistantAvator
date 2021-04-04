@@ -2,11 +2,9 @@
 
 A Python Virtual Assistant Project
 
-### Requirements
+### Platform
 
 - Python3
-- Virtual environment(python3 venv)
-- git
 
 ### Clone repository
 
