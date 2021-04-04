@@ -32,13 +32,6 @@ venv\Scripts\activate.bat
 ### External Library Installations
 
 1. SpeechRecognition: `pip3 install SpeechRecognition` -> Library for performing speech recognition
-2. PyAudio: `pip3 install PyAudio` -> required for using microphone input
-3. gTTS: `pip3 install gTTS` -> CLI tool to interface with Google Translate's text-to-speech
-4. playsound `pip3 install playsound` -> For playing sounds
-
-### External Library Installations
-
-1. SpeechRecognition: `pip3 install SpeechRecognition` -> Library for performing speech recognition
 2. PyAudio: `pip install PyAudio` -> required for using microphone input
 3. gTTS: `pip install gTTS` -> CLI tool to interface with Google Translate's text-to-speech
 4. playsound `pip install playsound` -> For playing sounds
