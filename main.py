@@ -69,9 +69,9 @@ def commandEngine():
     while True:
             
         # Load output from microphone
-        command = soundEngine()
+        # command = soundEngine()
         
-        # command = 'gye'
+        command = 'weather'
         
         
     
@@ -91,7 +91,7 @@ def commandEngine():
             
         elif 'weather' in command:  # Weather Handler
             # set location
-            location = 'greenland'
+            location = 'uganda'
             
             # Weather finder
             async def getWeather(location):
@@ -102,16 +102,19 @@ def commandEngine():
                 await client.close()
             
             # Get weather    
-            weather = asyncio.run(getWeather(location))
+            try:
+                weather = asyncio.run(getWeather(location))
             
-            # convert weather to Fahrenheit
-            weather_in_celsius = (weather - 32) * (5/9)
+                # convert weather to Fahrenheit
+                weather_in_celsius = (weather - 32) * (5/9)
             
-            # Format weather output
-            weather_response = f'The weather is {round(weather_in_celsius, 1)} degrees celsius'
+                # Format weather output
+                weather_response = f'The weather is {round(weather_in_celsius, 1)} degrees celsius'
             
-            # Render response
-            speechEngine(weather_response)
+                # Render response
+                speechEngine(weather_response)
+            except:
+                speechEngine(f"Sorry! I couldn't find the weather data for {location}.")
             
     else:
         pass
