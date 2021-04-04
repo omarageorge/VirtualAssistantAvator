@@ -12,8 +12,7 @@ import wikipedia
 #ignore any warnings messages
 warnings.filterwarnings('ignore')
 
-
-# Listen to commands
+# Listens to commands
 def soundEngine():
     
     # Create a listener object
@@ -43,7 +42,6 @@ def soundEngine():
         return sound_to_text.lower()
         
         
-
 # Speech Handler
 def speechEngine(text):
     
@@ -66,15 +64,14 @@ def speechEngine(text):
     
 # Handles commands passed into the system
 def commandEngine():
+    # Keeps the soundEngine active
     while True:
             
         # Load output from microphone
-        # command = soundEngine()
+        command = soundEngine()
         
-        command = 'weather'
+        # command = 'what is eather' 
         
-        
-    
         if 'goodbye' in command:     # Exit Handler
             speechEngine('Have a nice time, Goodbye!')
             break
@@ -120,14 +117,10 @@ def commandEngine():
         pass
         
 
-
-
-
 # Main function
 def main():
     commandEngine()
 
-
-# Execute main function 
+# Calling Main function
 if __name__ == '__main__':
     main()
