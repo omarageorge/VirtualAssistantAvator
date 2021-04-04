@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 import speech_recognition as sr
 from gtts import gTTS
 import playsound as pl
@@ -62,4 +60,3 @@ def speechEngine(text):
     # Talk
     pl.playsound(sound_file)
     
->>>>>>> dev
