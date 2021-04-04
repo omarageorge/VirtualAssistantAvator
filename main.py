@@ -8,15 +8,6 @@ import calendar
 import random
 import wikipedia
 
-listener = sr.Recognizer()
-        
 
-def receive_command():
-    try:
-        with sr.Microphone() as source:
-            print('Listening...')
-            voice = listener.listen(source)
-            command = listener.recognize_google(voice)
-    except sr.UnknownValueError:
-        pass
-        
+#ignore any warnings messages
+warnings.filterwarnings('ignore')
