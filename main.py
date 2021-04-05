@@ -85,7 +85,7 @@ def commandProcessor():
             
         elif 'weather' in command:  # Weather Handler
             # set location
-            location = 'uganda'
+            location = 'kampala'
             
             # Weather finder
             async def getWeather(location):
