@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 # Create a time object
 time_str = datetime.now()
     

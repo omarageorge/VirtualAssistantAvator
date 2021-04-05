@@ -13,9 +13,6 @@ import os
 from minilib import isMorning, isAfterNoon, isEvening
 
 
-# GLOBALS
-ACTIVE_STATUS = True  # Stores soundEngine active status
-
 
 #ignore any warnings messages
 warnings.filterwarnings('ignore')
@@ -71,22 +68,33 @@ def speechEngine(text):
 # Handles commands passed into the system
 def commandProcessor():
     
+    # Respond to salutations
+    def respond_to_greeting():
+        if isMorning():
+            speechEngine('good morning!')
+        elif isAfterNoon():
+            speechEngine('good afternoon!')
+        elif isEvening():
+            speechEngine('good evening!')
+
     # Keeps the soundEngine active
     while True:
             
         # Get sound input from microphone
         command = soundEngine()
+        print(command)
         
-        if 'good morning' or 'good afternoon' or 'good evening' in command:  # Greetings Handler
-            if isMorning():
-                speechEngine('good morning!')
-            elif isAfterNoon():
-                speechEngine('good afternoon!')
-            elif isEvening():
-                speechEngine('good evening!')
+        if 'good morning' in command:  # Good morning
+            respond_to_greeting()
+        
+        elif 'good afternoon' in command:  # Good afternoon
+            respond_to_greeting()
+        
+        elif 'good evening' in command:  # Good evening
+            respond_to_greeting()
                 
         elif 'hello' in command:  # Hello Handler
-            speechEngine('Hello!')
+            speechEngine('Hi how are you?')
         
         elif 'date' in command: # Date Handler
             today = date.today()
@@ -155,15 +163,35 @@ def commandProcessor():
             
             # Open web browser on a new tab
             webbrowser.open_new_tab(query_string)
+        
+        elif 'email' in command:
+            speechEngine('Opening emails')
+            webbrowser.open_new_tab('https://mail.google.com/mail')
                 
-        elif 'goodbye' in command:     # Exit Handler
+        elif 'tell me about' in command:
+            replaced = command.replace('tell me about', '')
+            topic = replaced.strip()
+            try:
+                wiki = wikipedia.summary(topic, sentences=2)
+                speechEngine(wiki)
+            except:
+                speechEngine(f'Did not find anything on {topic} on wikipedia.')
+                
+            
+        elif 'bye' in command:     # Exit Handler
             # Goodbye response
-            speechEngine('Have a nice time, Goodbye!')
+            speechEngine("I'l be here whenever you need me! bye for now.")
             # Exit application
             break    
         else:
             pass
 
+
+
+
+
+# GLOBALS
+ACTIVE_STATUS = False  # Stores soundEngine active status
 
 def main():
 
@@ -174,15 +202,16 @@ def main():
         
         if ACTIVE_STATUS:
             app.title('Listening...')
+            # commandProcessor()
         else:
             app.title('Sleeping...')
+            
 
-
-    app = Tk()
-    app.title('Listening...')
+    app = Tk(className='Virtual Assistant Avator')
     app.geometry('340x440')
     app.configure(background='#fff')
     app.wm_resizable(width=False, height=False)
+    
 
 
     # Micropone button
@@ -196,10 +225,10 @@ def main():
     avator_lbl = Label(image=avator_img, background='#fff')
     avator_lbl.pack(side=BOTTOM)
 
-
     app.mainloop()
 
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    commandProcessor()
