@@ -9,7 +9,7 @@ import warnings
 import wikipedia
 import webbrowser
 import platform
-from minilib import checkTimeOfDay
+from minilib import isMorning, isAfterNoon, isEvening
 
 
 #ignore any warnings messages
@@ -71,17 +71,15 @@ def commandProcessor():
             
         # Get sound input from microphone
         command = soundEngine()
-        print(command)
         
-        if 'good morning' in command:  # Goodmorning Handler
-            speechEngine('Good morning!')
-        
-        elif 'good afternoon' in command:  # Good afternoon Handler
-            speechEngine('Good afternoon!')
-        
-        elif 'good evening' in command:  # Good evening Handler
-            speechEngine('Good evening!')
-        
+        if 'good morning' or 'good afternoon' or 'good evening' in command:  # Greetings Handler
+            if isMorning():
+                speechEngine('good morning!')
+            elif isAfterNoon():
+                speechEngine('good afternoon!')
+            elif isEvening():
+                speechEngine('good evening!')
+                
         elif 'hello' in command:  # Hello Handler
             speechEngine('Hello!')
         
@@ -93,7 +91,6 @@ def commandProcessor():
         elif 'time' in command: # Time handler
             time_str = datetime.now()
             time_response = f"The time is {time_str.strftime('%I:%M %p')}."
-            checkTimeOfDay()
             speechEngine(time_response)
             
         elif 'weather' in command:  # Weather Handler
