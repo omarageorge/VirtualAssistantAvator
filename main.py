@@ -1,15 +1,20 @@
-import asyncio
+from tkinter import *
 import speech_recognition as sr
 from gtts import gTTS
 import playsound as pl
-import os
 from datetime import date, datetime, time
 import python_weather
 import warnings
 import wikipedia
 import webbrowser
 import platform
+import asyncio
+import os
 from minilib import isMorning, isAfterNoon, isEvening
+
+
+# GLOBALS
+ACTIVE_STATUS = True  # Stores soundEngine active status
 
 
 #ignore any warnings messages
@@ -158,13 +163,43 @@ def commandProcessor():
             break    
         else:
             pass
-        
 
-# Main function
+
 def main():
-    # Run command processor
-    commandProcessor()
 
-# Calling Main function
+    # Status event manager
+    def manage_status(event):
+        global ACTIVE_STATUS
+        ACTIVE_STATUS = not ACTIVE_STATUS
+        
+        if ACTIVE_STATUS:
+            app.title('Listening...')
+        else:
+            app.title('Sleeping...')
+
+
+    app = Tk()
+    app.title('Listening...')
+    app.geometry('340x440')
+    app.configure(background='#fff')
+    app.wm_resizable(width=False, height=False)
+
+
+    # Micropone button
+    mic_img = PhotoImage(file='./images/mic.png')
+    btn_mic = Button(app, image=mic_img, borderwidth=0, activebackground='#f38a8e' ,background='#fff', cursor='hand2')
+    btn_mic.bind('<Button-1>', manage_status)
+    btn_mic.pack(side=TOP, pady=20)
+
+    # Avator image
+    avator_img = PhotoImage(file='./images/avator.png')
+    avator_lbl = Label(image=avator_img, background='#fff')
+    avator_lbl.pack(side=BOTTOM)
+
+
+    app.mainloop()
+
+
+
 if __name__ == '__main__':
     main()
