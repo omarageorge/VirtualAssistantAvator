@@ -26,6 +26,7 @@ def soundEngine():
         
         # Store data received from microphone
         microphone_data = listener.listen(source)
+    
         
         # Stores text data from conversion
         sound_to_text = ''
@@ -61,13 +62,12 @@ def speechEngine(text):
     
 # Handles commands passed into the system
 def commandProcessor():
+    
     # Keeps the soundEngine active
     while True:
             
-        # Load output from microphone
+        # Get sound input from microphone
         command = soundEngine()
-        
-        # command = 'what is eather' 
         
         if 'goodbye' in command:     # Exit Handler
             speechEngine('Have a nice time, Goodbye!')
