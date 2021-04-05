@@ -6,6 +6,7 @@ from datetime import date, datetime, time
 import python_weather
 import warnings
 import wikipedia
+import pyjokes
 import webbrowser
 import platform
 import asyncio
@@ -64,10 +65,9 @@ def speechEngine(text):
     if os.path.isfile(sound_file):
         os.remove(sound_file)
     
-    
+
 # Handles commands passed into the system
 def commandProcessor():
-    
     # Respond to salutations
     def respond_to_greeting():
         if isMorning():
@@ -95,6 +95,12 @@ def commandProcessor():
                 
         elif 'hello' in command:  # Hello Handler
             speechEngine('Hi how are you?')
+            
+        elif 'introduce' in command:
+            intro = '''
+            My name is Anna, a virtual assistant to assist with any task as best I can.
+            '''
+            speechEngine(intro)
         
         elif 'date' in command: # Date Handler
             today = date.today()
@@ -134,7 +140,7 @@ def commandProcessor():
                 # Weather not found
                 speechEngine(f"Sorry! I couldn't find the weather data for {location}.")
                 
-        elif 'search' in command:  # Opens search platforms (YouTube, Wikipedia, Google)
+        elif 'open' in command:  # Opens search platforms (YouTube, Wikipedia, Google)
             if 'youtube' in command:  # Opens YouTube
                 speechEngine('Opening youtube!')
                 webbrowser.open_new_tab('https://www.youtube.com/')
@@ -172,13 +178,23 @@ def commandProcessor():
             replaced = command.replace('tell me about', '')
             topic = replaced.strip()
             try:
+                speechEngine('just give me a sec!')
                 wiki = wikipedia.summary(topic, sentences=2)
                 speechEngine(wiki)
             except:
                 speechEngine(f'Did not find anything on {topic} on wikipedia.')
                 
+        elif 'joke' in command:
             
-        elif 'bye' in command:     # Exit Handler
+            # Retrieve jokes
+            joke = pyjokes.get_joke()
+            
+            # Tell the joke
+            speechEngine("Okay!")
+            speechEngine(joke)
+        
+        
+        elif 'bye' in command:  # Exit Handler
             # Goodbye response
             speechEngine("I'll be here whenever you need me! bye for now.")
             # Exit application
@@ -186,39 +202,20 @@ def commandProcessor():
         else:
             pass
 
-
-
-
-
-# GLOBALS
-ACTIVE_STATUS = False  # Stores soundEngine active status
-
+# Main function
 def main():
-
-    # Status event manager
-    def manage_status(event):
-        global ACTIVE_STATUS
-        ACTIVE_STATUS = not ACTIVE_STATUS
-        
-        if ACTIVE_STATUS:
-            app.title('Listening...')
-            # commandProcessor()
-        else:
-            app.title('Sleeping...')
-            
-
+    
+    # Creating Tkinter Object
     app = Tk()
     app.title('Virtual Assistant Avator')
     app.geometry('340x440')
     app.configure(background='#fff')
     app.wm_resizable(width=False, height=False)
+    app.call('wm', 'attributes', '.', '-topmost', '1')
     
-
-
     # Micropone button
     mic_img = PhotoImage(file='./images/mic.png')
-    btn_mic = Button(app, image=mic_img, borderwidth=0, activebackground='#f38a8e' ,background='#fff', cursor='hand2')
-    btn_mic.bind('<Button-1>', manage_status)
+    btn_mic = Label(app, image=mic_img, border=0, background='#fff', cursor='hand2')
     btn_mic.pack(side=TOP, pady=20)
 
     # Avator image
@@ -226,9 +223,9 @@ def main():
     avator_lbl = Label(image=avator_img, background='#fff')
     avator_lbl.pack(side=BOTTOM)
     
-    
     # Function to execute after gui loads
     def start_engines():
+        
         # Start command processor
         commandProcessor()
         
@@ -239,7 +236,6 @@ def main():
     app.after(1000, start_engines)
 
     app.mainloop()
-
 
 
 if __name__ == '__main__':
