@@ -7,6 +7,9 @@ from datetime import date, datetime, time
 import python_weather
 import warnings
 import wikipedia
+import webbrowser
+import platform
+from minilib import checkTimeOfDay
 
 
 #ignore any warnings messages
@@ -68,10 +71,19 @@ def commandProcessor():
             
         # Get sound input from microphone
         command = soundEngine()
+        print(command)
         
-        if 'goodbye' in command:     # Exit Handler
-            speechEngine('Have a nice time, Goodbye!')
-            break
+        if 'good morning' in command:  # Goodmorning Handler
+            speechEngine('Good morning!')
+        
+        elif 'good afternoon' in command:  # Good afternoon Handler
+            speechEngine('Good afternoon!')
+        
+        elif 'good evening' in command:  # Good evening Handler
+            speechEngine('Good evening!')
+        
+        elif 'hello' in command:  # Hello Handler
+            speechEngine('Hello!')
         
         elif 'date' in command: # Date Handler
             today = date.today()
@@ -81,6 +93,7 @@ def commandProcessor():
         elif 'time' in command: # Time handler
             time_str = datetime.now()
             time_response = f"The time is {time_str.strftime('%I:%M %p')}."
+            checkTimeOfDay()
             speechEngine(time_response)
             
         elif 'weather' in command:  # Weather Handler
@@ -108,10 +121,46 @@ def commandProcessor():
                 # Render response
                 speechEngine(weather_response)
             except:
+                # Weather not found
                 speechEngine(f"Sorry! I couldn't find the weather data for {location}.")
+                
+        elif 'search' in command:  # Opens search platforms (YouTube, Wikipedia, Google)
+            if 'youtube' in command:  # Opens YouTube
+                speechEngine('Opening youtube!')
+                webbrowser.open_new_tab('https://www.youtube.com/')
+                
+            elif 'wikipedia' in command:  # Opens Wikipedia
+                speechEngine('Opening wikipedia!')
+                webbrowser.open_new_tab('https://www.wikipedia.org/')
+                
+            else:  # Opens Google Search
+                speechEngine('Opening google search!')
+                webbrowser.open_new_tab('https://google.com/')
+        
+        elif 'google' in command:
             
-    else:
-        pass
+            # Remove the google word from command
+            filtered = command.replace('google', '')
+            
+            # Remove extra spaces from start and end of the query
+            search_query = filtered.strip()
+            
+            # Form google search query string
+            query_string = f'https://www.google.com/search?&client={platform.system}&q={search_query}'
+            
+            # Voice response
+            speechEngine(f'googling {search_query}')
+            
+            # Open web browser on a new tab
+            webbrowser.open_new_tab(query_string)
+                
+        elif 'goodbye' in command:     # Exit Handler
+            # Goodbye response
+            speechEngine('Have a nice time, Goodbye!')
+            # Exit application
+            break    
+        else:
+            pass
         
 
 # Main function
