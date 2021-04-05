@@ -27,9 +27,6 @@ def soundEngine():
         # Store data received from microphone
         microphone_data = listener.listen(source)
         
-        # Covert to lowercase
-        microphone_data
-        
         # Stores text data from conversion
         sound_to_text = ''
         
