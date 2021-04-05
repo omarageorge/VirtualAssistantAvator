@@ -180,7 +180,7 @@ def commandProcessor():
             
         elif 'bye' in command:     # Exit Handler
             # Goodbye response
-            speechEngine("I'l be here whenever you need me! bye for now.")
+            speechEngine("I'll be here whenever you need me! bye for now.")
             # Exit application
             break    
         else:
@@ -207,7 +207,8 @@ def main():
             app.title('Sleeping...')
             
 
-    app = Tk(className='Virtual Assistant Avator')
+    app = Tk()
+    app.title('Virtual Assistant Avator')
     app.geometry('340x440')
     app.configure(background='#fff')
     app.wm_resizable(width=False, height=False)
@@ -224,11 +225,23 @@ def main():
     avator_img = PhotoImage(file='./images/avator.png')
     avator_lbl = Label(image=avator_img, background='#fff')
     avator_lbl.pack(side=BOTTOM)
+    
+    
+    # Function to execute after gui loads
+    def start_engines():
+        # Start command processor
+        commandProcessor()
+        
+        # Exit system
+        exit()
+    
+    # Start_engines function after 1s
+    app.after(1000, start_engines)
 
     app.mainloop()
 
 
 
 if __name__ == '__main__':
-    # main()
-    commandProcessor()
+    main()
+    # commandProcessor()
