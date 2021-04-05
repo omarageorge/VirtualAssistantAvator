@@ -63,7 +63,7 @@ def speechEngine(text):
     
     
 # Handles commands passed into the system
-def commandEngine():
+def commandProcessor():
     # Keeps the soundEngine active
     while True:
             
@@ -102,7 +102,7 @@ def commandEngine():
             try:
                 weather = asyncio.run(getWeather(location))
             
-                # convert weather to Fahrenheit
+                # convert weather to Celsius
                 weather_in_celsius = (weather - 32) * (5/9)
             
                 # Format weather output
@@ -119,7 +119,8 @@ def commandEngine():
 
 # Main function
 def main():
-    commandEngine()
+    # Run command processor
+    commandProcessor()
 
 # Calling Main function
 if __name__ == '__main__':
