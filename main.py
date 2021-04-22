@@ -68,6 +68,9 @@ def speechEngine(text):
 
 # Handles commands passed into the system
 def commandProcessor():
+    
+    # Welcome message
+    speechEngine('Hi there! How are you?')
     # Respond to salutations
     def respond_to_greeting():
         if isMorning():
@@ -82,6 +85,7 @@ def commandProcessor():
             
         # Get sound input from microphone
         command = soundEngine()
+        # command = 'tell me about taylor swift'
         print(command)
         
         if 'good morning' in command:  # Good morning
@@ -98,7 +102,8 @@ def commandProcessor():
             
         elif 'introduce' in command:
             intro = '''
-            My name is Anna, a virtual assistant to assist with any task as best I can.
+            Hello! I'm a virtual assistant designed to assist you with any task as best I can.
+            Tell me what you need, and I'll get it done.
             '''
             speechEngine(intro)
         
@@ -179,10 +184,11 @@ def commandProcessor():
             topic = replaced.strip()
             try:
                 speechEngine('just give me a sec!')
-                wiki = wikipedia.summary(topic, sentences=2)
+                wiki = wikipedia.summary(topic, sentences=3)
+                print(wiki)
                 speechEngine(wiki)
             except:
-                speechEngine(f'Did not find anything on {topic} on wikipedia.')
+                speechEngine(f'sorry! i did not find anything on {topic}.')
                 
         elif 'joke' in command:
             
@@ -201,6 +207,8 @@ def commandProcessor():
             break    
         else:
             pass
+        
+        break
 
 # Main function
 def main():
@@ -208,19 +216,19 @@ def main():
     # Creating Tkinter Object
     app = Tk()
     app.title('Virtual Assistant Avator')
-    app.geometry('340x440')
-    app.configure(background='#fff')
+    app.geometry('340x400')
+    app.configure(background='#000')
     app.wm_resizable(width=False, height=False)
     app.call('wm', 'attributes', '.', '-topmost', '1')
     
     # Micropone button
-    mic_img = PhotoImage(file='./images/mic.png')
-    btn_mic = Label(app, image=mic_img, border=0, background='#fff', cursor='hand2')
-    btn_mic.pack(side=TOP, pady=20)
+    # mic_img = PhotoImage(file='./images/mic.png')
+    # btn_mic = Label(app, image=mic_img, border=0, background='#fff', cursor='hand2')
+    # btn_mic.pack(side=TOP, pady=20)
 
     # Avator image
     avator_img = PhotoImage(file='./images/avator.png')
-    avator_lbl = Label(image=avator_img, background='#fff')
+    avator_lbl = Label(image=avator_img, background='#000')
     avator_lbl.pack(side=BOTTOM)
     
     # Function to execute after gui loads
@@ -240,4 +248,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # commandProcessor()
+    
