@@ -37,8 +37,11 @@ def soundEngine():
         try:
             # Convert microphone data to text
             sound_to_text = listener.recognize_google(microphone_data)
-        except:
-            pass
+        except sr.UnknownValueError:
+            print("I didn't quite understand you. Can you say that again?")
+
+        except sr.RequestError as e:
+            print("Request Failed; {0}".format(e))
 
         return sound_to_text.lower()
 
@@ -210,21 +213,21 @@ def commandProcessor():
 def main():
     # Creating Tkinter Object
     app = Tk()
-    app.title('Virtual Assistant Avator')
+    app.title('Virtual Assistant Avatar')
     app.geometry('340x440')
     app.configure(background='#fff')
     app.wm_resizable(width=False, height=False)
     app.call('wm', 'attributes', '.', '-topmost', '1')
 
-    # Micropone button
+    # Microphone button
     mic_img = PhotoImage(file='./images/mic.png')
     btn_mic = Label(app, image=mic_img, border=0, background='#fff', cursor='hand2')
     btn_mic.pack(side=TOP, pady=20)
 
-    # Avator image
-    avator_img = PhotoImage(file='./images/avator.png')
-    avator_lbl = Label(image=avator_img, background='#fff')
-    avator_lbl.pack(side=BOTTOM)
+    # Avatar image
+    avatar_img = PhotoImage(file='./images/avatar.png')
+    avatar_lbl = Label(image=avatar_img, background='#fff')
+    avatar_lbl.pack(side=BOTTOM)
 
     # Function to execute after gui loads
     def start_engines():
