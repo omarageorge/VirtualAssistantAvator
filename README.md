@@ -37,3 +37,4 @@ venv\Scripts\activate.bat
 4. playsound `pip install playsound` -> For playing sounds
 5. python-weather `pip install python-weather` -> A free and asynchronous weather API wrapper
 6. wikipedia `pip install wikipedia` -> A library that makes it easy to access and parse data from Wikipedia
+7. pyjokes `pip install pyjokes` -> A Library for retreivin grandom programming jokes

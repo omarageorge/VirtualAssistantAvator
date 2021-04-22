@@ -11,60 +11,59 @@ import webbrowser
 import platform
 import asyncio
 import os
-from minilib import isMorning, isAfterNoon, isEvening
+from minilib import *
 
-
-
-#ignore any warnings messages
+# ignore any warnings messages
 warnings.filterwarnings('ignore')
+
 
 # Listens to commands
 def soundEngine():
-    
     # Create a listener object
     listener = sr.Recognizer()
-    
+
     # Listen to sound from microphone
     with sr.Microphone() as source:
-        
+
         # Show microphone status
         print('Listening...')
-        
+
         # Store data received from microphone
         microphone_data = listener.listen(source)
-    
-        
+
         # Stores text data from conversion
         sound_to_text = ''
-        
+
         try:
             # Convert microphone data to text
             sound_to_text = listener.recognize_google(microphone_data)
-        except:
-            pass
-        
+        except sr.UnknownValueError:
+            print("I didn't quite understand you. Can you say that again?")
+
+        except sr.RequestError as e:
+            print("Request Failed; {0}".format(e))
+
         return sound_to_text.lower()
-        
-        
+
+
 # Speech Handler
 def speechEngine(text):
-    
     # Sound file name
     sound_file = 'voice_audio_file.mp3'
-    
+
     # Convert text to speech
     soundObject = gTTS(text, lang='en', slow=False)
-    
+
     # Save sound_file to file system
     soundObject.save(sound_file)
-    
+
     # Talk
     pl.playsound(sound_file)
-    
+
     # Cleanup
     if os.path.isfile(sound_file):
         os.remove(sound_file)
-    
+
 
 # Handles commands passed into the system
 def commandProcessor():
@@ -82,103 +81,110 @@ def commandProcessor():
 
     # Keeps the soundEngine active
     while True:
-            
+
         # Get sound input from microphone
         command = soundEngine()
         # command = 'tell me about taylor swift'
         print(command)
-        
+
         if 'good morning' in command:  # Good morning
             respond_to_greeting()
-        
+
         elif 'good afternoon' in command:  # Good afternoon
             respond_to_greeting()
-        
+
         elif 'good evening' in command:  # Good evening
             respond_to_greeting()
-                
+
         elif 'hello' in command:  # Hello Handler
             speechEngine('Hi how are you?')
-            
+
+
         elif 'introduce' in command:
             intro = '''
             Hello! I'm a virtual assistant designed to assist you with any task as best I can.
             Tell me what you need, and I'll get it done.
             '''
             speechEngine(intro)
-        
-        elif 'date' in command: # Date Handler
+
+        elif 'your name' in command:
+            intro = '''
+             My name is Anna.
+                       '''
+            speechEngine(intro)
+
+        elif 'date' in command:  # Date Handler
             today = date.today()
             date_response = f"The date today is {today.strftime('%d %B, %Y')}."
             speechEngine(date_response)
-            
-        elif 'time' in command: # Time handler
+
+        elif 'time' in command:  # Time handler
             time_str = datetime.now()
             time_response = f"The time is {time_str.strftime('%I:%M %p')}."
             speechEngine(time_response)
-            
+
         elif 'weather' in command:  # Weather Handler
             # set location
             location = 'kampala'
-            
+
             # Weather finder
             async def getWeather(location):
                 # Declare the client
                 client = python_weather.Client(format=python_weather.IMPERIAL)
-                weather =  await client.find(location)
+                weather = await client.find(location)
                 return weather.current.temperature
                 await client.close()
-            
+
             # Get weather    
             try:
                 weather = asyncio.run(getWeather(location))
-            
+
                 # convert weather to Celsius
-                weather_in_celsius = (weather - 32) * (5/9)
-            
+                weather_in_celsius = (weather - 32) * (5 / 9)
+
                 # Format weather output
                 weather_response = f'The weather is {round(weather_in_celsius, 1)} degrees celsius'
-            
+
                 # Render response
                 speechEngine(weather_response)
             except:
                 # Weather not found
                 speechEngine(f"Sorry! I couldn't find the weather data for {location}.")
-                
+
         elif 'open' in command:  # Opens search platforms (YouTube, Wikipedia, Google)
             if 'youtube' in command:  # Opens YouTube
                 speechEngine('Opening youtube!')
                 webbrowser.open_new_tab('https://www.youtube.com/')
-                
+
             elif 'wikipedia' in command:  # Opens Wikipedia
                 speechEngine('Opening wikipedia!')
                 webbrowser.open_new_tab('https://www.wikipedia.org/')
-                
+
             else:  # Opens Google Search
                 speechEngine('Opening google search!')
                 webbrowser.open_new_tab('https://google.com/')
-        
+
         elif 'google' in command:
-            
+
             # Remove the google word from command
             filtered = command.replace('google', '')
-            
+
             # Remove extra spaces from start and end of the query
             search_query = filtered.strip()
-            
+
             # Form google search query string
             query_string = f'https://www.google.com/search?&client={platform.system}&q={search_query}'
-            
+
             # Voice response
             speechEngine(f'googling {search_query}')
-            
+
             # Open web browser on a new tab
             webbrowser.open_new_tab(query_string)
-        
+
         elif 'email' in command:
             speechEngine('Opening emails')
             webbrowser.open_new_tab('https://mail.google.com/mail')
-                
+
         elif 'tell me about' in command:
             replaced = command.replace('tell me about', '')
             topic = replaced.strip()
@@ -188,33 +194,39 @@ def commandProcessor():
                 print(wiki)
                 speechEngine(wiki)
             except:
+<<<<<<< HEAD
                 speechEngine(f'sorry! i did not find anything on {topic}.')
                 
+=======
+                speechEngine(f'Did not find anything on {topic} on wikipedia.')
+
+>>>>>>> 5693344449547f067765d4f7859d47221d71c838
         elif 'joke' in command:
-            
+
             # Retrieve jokes
             joke = pyjokes.get_joke()
-            
+
             # Tell the joke
             speechEngine("Okay!")
             speechEngine(joke)
-        
-        
+
+
         elif 'bye' in command:  # Exit Handler
             # Goodbye response
             speechEngine("I'll be here whenever you need me! bye for now.")
             # Exit application
-            break    
+            break
         else:
             pass
         
         break
 
+
 # Main function
 def main():
-    
     # Creating Tkinter Object
     app = Tk()
+<<<<<<< HEAD
     app.title('Virtual Assistant Avator')
     app.geometry('340x400')
     app.configure(background='#000')
@@ -231,15 +243,32 @@ def main():
     avator_lbl = Label(image=avator_img, background='#000')
     avator_lbl.pack(side=BOTTOM)
     
+=======
+    app.title('Virtual Assistant Avatar')
+    app.geometry('340x440')
+    app.configure(background='#fff')
+    app.wm_resizable(width=False, height=False)
+    app.call('wm', 'attributes', '.', '-topmost', '1')
+
+    # Microphone button
+    mic_img = PhotoImage(file='./images/mic.png')
+    btn_mic = Label(app, image=mic_img, border=0, background='#fff', cursor='hand2')
+    btn_mic.pack(side=TOP, pady=20)
+
+    # Avatar image
+    avatar_img = PhotoImage(file='./images/avatar.png')
+    avatar_lbl = Label(image=avatar_img, background='#fff')
+    avatar_lbl.pack(side=BOTTOM)
+
+>>>>>>> 5693344449547f067765d4f7859d47221d71c838
     # Function to execute after gui loads
     def start_engines():
-        
         # Start command processor
         commandProcessor()
-        
+
         # Exit system
         exit()
-    
+
     # Start_engines function after 1s
     app.after(1000, start_engines)
 
@@ -248,4 +277,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+<<<<<<< HEAD
     
+=======
+    # commandProcessor()
+>>>>>>> 5693344449547f067765d4f7859d47221d71c838

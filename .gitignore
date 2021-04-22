@@ -2,3 +2,4 @@ venv
 .vscode
 *.mp3
 __pycache__
+.idea
