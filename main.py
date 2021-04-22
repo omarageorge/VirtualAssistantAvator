@@ -194,13 +194,8 @@ def commandProcessor():
                 print(wiki)
                 speechEngine(wiki)
             except:
-<<<<<<< HEAD
-                speechEngine(f'sorry! i did not find anything on {topic}.')
-                
-=======
                 speechEngine(f'Did not find anything on {topic} on wikipedia.')
 
->>>>>>> 5693344449547f067765d4f7859d47221d71c838
         elif 'joke' in command:
 
             # Retrieve jokes
@@ -211,7 +206,7 @@ def commandProcessor():
             speechEngine(joke)
 
 
-        elif 'bye' in command:  # Exit Handler
+        elif 'exit' in command:  # Exit Handler
             # Goodbye response
             speechEngine("I'll be here whenever you need me! bye for now.")
             # Exit application
@@ -219,48 +214,24 @@ def commandProcessor():
         else:
             pass
         
-        break
+        break #  This line is only for development purposes. to be removed on production
 
 
 # Main function
 def main():
     # Creating Tkinter Object
     app = Tk()
-<<<<<<< HEAD
-    app.title('Virtual Assistant Avator')
-    app.geometry('340x400')
-    app.configure(background='#000')
-    app.wm_resizable(width=False, height=False)
-    app.call('wm', 'attributes', '.', '-topmost', '1')
-    
-    # Micropone button
-    # mic_img = PhotoImage(file='./images/mic.png')
-    # btn_mic = Label(app, image=mic_img, border=0, background='#fff', cursor='hand2')
-    # btn_mic.pack(side=TOP, pady=20)
-
-    # Avator image
-    avator_img = PhotoImage(file='./images/avator.png')
-    avator_lbl = Label(image=avator_img, background='#000')
-    avator_lbl.pack(side=BOTTOM)
-    
-=======
     app.title('Virtual Assistant Avatar')
-    app.geometry('340x440')
+    app.geometry('340x400')
     app.configure(background='#fff')
     app.wm_resizable(width=False, height=False)
     app.call('wm', 'attributes', '.', '-topmost', '1')
-
-    # Microphone button
-    mic_img = PhotoImage(file='./images/mic.png')
-    btn_mic = Label(app, image=mic_img, border=0, background='#fff', cursor='hand2')
-    btn_mic.pack(side=TOP, pady=20)
 
     # Avatar image
     avatar_img = PhotoImage(file='./images/avatar.png')
     avatar_lbl = Label(image=avatar_img, background='#fff')
     avatar_lbl.pack(side=BOTTOM)
 
->>>>>>> 5693344449547f067765d4f7859d47221d71c838
     # Function to execute after gui loads
     def start_engines():
         # Start command processor
@@ -277,8 +248,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-<<<<<<< HEAD
-    
-=======
-    # commandProcessor()
->>>>>>> 5693344449547f067765d4f7859d47221d71c838
