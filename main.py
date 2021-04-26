@@ -10,7 +10,6 @@ import pyjokes
 import webbrowser
 import platform
 import os
-import requests
 
 # ignore any warnings messages
 warnings.filterwarnings('ignore')
@@ -66,9 +65,9 @@ def speechEngine(text):
 
 # Handles commands passed into the system
 def commandProcessor():
+    
     # Welcome message
     speechEngine('Hi there! How are you?')
-
     # Respond to salutations
     def respond_to_greeting():
         if isMorning():
@@ -121,35 +120,12 @@ def commandProcessor():
             speechEngine(time_response)
 
         elif 'weather' in command:  # Weather Handler
-
+          
             # Retrieve location
-            location = command.replace('what is the weather in', ' ').strip()
-            user_api = os.environ['OW_api_key']
-
-            complete_api_link = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + user_api
-            api_link = requests.get(complete_api_link)
-            api_data = api_link.json()
-
-            # Get weather
-            try:
-
-                # read api data
-
-                weather_desc = api_data['weather'][0]['description']
-                temp_city = ((api_data['main']['temp']) - 273.15)
-                humidity = api_data['main']['humidity']
-                # wind_spd = api_data['wind']['speed']
-
-                weather_response = f'We currently have {weather_desc} and {round((temp_city), 1)} degrees celcius in {location} with a humidity of {humidity} %'
-
-                # Render response
-                speechEngine(weather_response)
-
-            except:
-                # Weather not found
-                speechEngine(f"Sorry! I couldn't find the weather data for {location}.")
-
-
+           location = command.replace('what is the weather in', ' ').strip()
+           
+            # weather api code.
+            
 
         elif 'open' in command:  # Opens search platforms (YouTube, Wikipedia, Google)
             if 'youtube' in command:  # Opens YouTube
@@ -213,8 +189,8 @@ def commandProcessor():
             break
         else:
             pass
-
-        break  # This line is only for development purposes. to be removed on production
+        
+        break #  This line is only for development purposes. to be removed on production
 
 
 # Main function
