@@ -117,7 +117,7 @@ def commandProcessor():
             speechEngine("you bet")
 
         elif "i'm fine" in command:
-            speechEngine("that is great!how can i help you? ")
+            speechEngine("that's great!how can i help you? ")
 
 
         elif 'date' in command:  # Date Handler
