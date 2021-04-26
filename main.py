@@ -9,6 +9,7 @@ import wikipedia
 import pyjokes
 import webbrowser
 import platform
+import requests
 import os
 
 # ignore any warnings messages
@@ -65,9 +66,9 @@ def speechEngine(text):
 
 # Handles commands passed into the system
 def commandProcessor():
-    
     # Welcome message
     speechEngine('Hi there! How are you?')
+
     # Respond to salutations
     def respond_to_greeting():
         if isMorning():
@@ -100,14 +101,24 @@ def commandProcessor():
 
         elif 'introduce' in command:
             intro = '''
-            Hello! I'm a virtual assistant designed to assist you with any task as best I can.
-            Tell me what you need, and I'll get it done.
+            Hello! i'm Kira! A virtual assistant designed to assist you with simple tasks.
+            I can tell  you the weather, open your email, search stuff on google or wikipedia and even make you laugh !
             '''
             speechEngine(intro)
 
         elif 'your name' in command:
-            intro = 'My name is Anna.'
+            intro = 'My name is Kira.'
             speechEngine(intro)
+
+        elif "funny" in command:
+            speechEngine("lol! do i look like a clown to you? ")
+
+        elif "really" in command:
+            speechEngine("you bet")
+
+        elif "i'm fine" in command:
+            speechEngine("that is great!how can i help you? ")
+
 
         elif 'date' in command:  # Date Handler
             today = date.today()
@@ -120,12 +131,35 @@ def commandProcessor():
             speechEngine(time_response)
 
         elif 'weather' in command:  # Weather Handler
-          
+
             # Retrieve location
-           location = command.replace('what is the weather in', ' ').strip()
-           
+            location = command.replace('what is the weather in', ' ').strip()
+            user_api = os.environ['OW_api_key']
+
+            complete_api_link = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + user_api
+            api_link = requests.get(complete_api_link)
+            api_data = api_link.json()
+
+            # Get weather
+            try:
+
+                # read api data
+
+                weather_desc = api_data['weather'][0]['description']
+                temp_city = ((api_data['main']['temp']) - 273.15)
+                hmdt = api_data['main']['humidity']
+                # wind_spd = api_data['wind']['speed']
+
+                weather_response = f'We currently have {weather_desc} and {round((temp_city), 1)} degrees celcius in {location} with a humidity of {hmdt} %'
+
+                # Render response
+                speechEngine(weather_response)
+            except:
+                # Weather not found
+                speechEngine(f"Sorry! I couldn't find the weather data for {location}.")
+
             # weather api code.
-            
+
 
         elif 'open' in command:  # Opens search platforms (YouTube, Wikipedia, Google)
             if 'youtube' in command:  # Opens YouTube
@@ -189,8 +223,8 @@ def commandProcessor():
             break
         else:
             pass
-        
-        break #  This line is only for development purposes. to be removed on production
+
+        #break  # This line is only for development purposes. to be removed on production
 
 
 # Main function
