@@ -1,17 +1,16 @@
 from tkinter import *
-import speech_recognition as sr
-from gtts import gTTS
-import playsound as pl
 from datetime import date, datetime, time
-import python_weather
+from gtts import gTTS
+from minilib import *
+import speech_recognition as sr
+import playsound as pl
 import warnings
 import wikipedia
 import pyjokes
 import webbrowser
 import platform
-import asyncio
 import os
-from minilib import *
+import requests
 
 # ignore any warnings messages
 warnings.filterwarnings('ignore')
@@ -67,6 +66,9 @@ def speechEngine(text):
 
 # Handles commands passed into the system
 def commandProcessor():
+    # Welcome message
+    speechEngine('Hi there! How are you?')
+
     # Respond to salutations
     def respond_to_greeting():
         if isMorning():
@@ -81,6 +83,7 @@ def commandProcessor():
 
         # Get sound input from microphone
         command = soundEngine()
+        # command = 'tell me about taylor swift'
         print(command)
 
         if 'good morning' in command:  # Good morning
@@ -98,14 +101,13 @@ def commandProcessor():
 
         elif 'introduce' in command:
             intro = '''
-            My name is Anna, a virtual assistant to assist with any task as best I can.
+            Hello! I'm a virtual assistant designed to assist you with any task as best I can.
+            Tell me what you need, and I'll get it done.
             '''
             speechEngine(intro)
 
         elif 'your name' in command:
-            intro = '''
-             My name is Anna.
-                       '''
+            intro = 'My name is Anna.'
             speechEngine(intro)
 
         elif 'date' in command:  # Date Handler
@@ -119,32 +121,35 @@ def commandProcessor():
             speechEngine(time_response)
 
         elif 'weather' in command:  # Weather Handler
-            # set location
-            location = 'kampala'
 
-            # Weather finder
-            async def getWeather(location):
-                # Declare the client
-                client = python_weather.Client(format=python_weather.IMPERIAL)
-                weather = await client.find(location)
-                return weather.current.temperature
-                await client.close()
+            # Retrieve location
+            location = command.replace('what is the weather in', ' ').strip()
+            user_api = os.environ['OW_api_key']
 
-            # Get weather    
+            complete_api_link = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + user_api
+            api_link = requests.get(complete_api_link)
+            api_data = api_link.json()
+
+            # Get weather
             try:
-                weather = asyncio.run(getWeather(location))
 
-                # convert weather to Celsius
-                weather_in_celsius = (weather - 32) * (5 / 9)
+                # read api data
 
-                # Format weather output
-                weather_response = f'The weather is {round(weather_in_celsius, 1)} degrees celsius'
+                weather_desc = api_data['weather'][0]['description']
+                temp_city = ((api_data['main']['temp']) - 273.15)
+                humidity = api_data['main']['humidity']
+                # wind_spd = api_data['wind']['speed']
+
+                weather_response = f'We currently have {weather_desc} and {round((temp_city), 1)} degrees celcius in {location} with a humidity of {humidity} %'
 
                 # Render response
                 speechEngine(weather_response)
+
             except:
                 # Weather not found
                 speechEngine(f"Sorry! I couldn't find the weather data for {location}.")
+
+
 
         elif 'open' in command:  # Opens search platforms (YouTube, Wikipedia, Google)
             if 'youtube' in command:  # Opens YouTube
@@ -186,6 +191,7 @@ def commandProcessor():
             try:
                 speechEngine('just give me a sec!')
                 wiki = wikipedia.summary(topic, sentences=2)
+                print(wiki)
                 speechEngine(wiki)
             except:
                 speechEngine(f'Did not find anything on {topic} on wikipedia.')
@@ -200,7 +206,7 @@ def commandProcessor():
             speechEngine(joke)
 
 
-        elif 'bye' in command:  # Exit Handler
+        elif 'exit' in command:  # Exit Handler
             # Goodbye response
             speechEngine("I'll be here whenever you need me! bye for now.")
             # Exit application
@@ -208,21 +214,18 @@ def commandProcessor():
         else:
             pass
 
+        break  # This line is only for development purposes. to be removed on production
+
 
 # Main function
 def main():
     # Creating Tkinter Object
     app = Tk()
     app.title('Virtual Assistant Avatar')
-    app.geometry('340x440')
+    app.geometry('340x400')
     app.configure(background='#fff')
     app.wm_resizable(width=False, height=False)
     app.call('wm', 'attributes', '.', '-topmost', '1')
-
-    # Microphone button
-    mic_img = PhotoImage(file='./images/mic.png')
-    btn_mic = Label(app, image=mic_img, border=0, background='#fff', cursor='hand2')
-    btn_mic.pack(side=TOP, pady=20)
 
     # Avatar image
     avatar_img = PhotoImage(file='./images/avatar.png')
@@ -245,4 +248,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # commandProcessor()
