@@ -1,7 +1,6 @@
 from tkinter import *
 from datetime import date, datetime, time
 from gtts import gTTS
-from python_weather import weather
 from minilib import *
 import speech_recognition as sr
 import playsound as pl
