@@ -1,17 +1,16 @@
 from tkinter import *
-import speech_recognition as sr
-from gtts import gTTS
-import playsound as pl
 from datetime import date, datetime, time
-import python_weather
+from gtts import gTTS
+from python_weather import weather
+from minilib import *
+import speech_recognition as sr
+import playsound as pl
 import warnings
 import wikipedia
 import pyjokes
 import webbrowser
 import platform
-import asyncio
 import os
-from minilib import *
 
 # ignore any warnings messages
 warnings.filterwarnings('ignore')
@@ -108,9 +107,7 @@ def commandProcessor():
             speechEngine(intro)
 
         elif 'your name' in command:
-            intro = '''
-             My name is Anna.
-                       '''
+            intro = 'My name is Anna.'
             speechEngine(intro)
 
         elif 'date' in command:  # Date Handler
@@ -124,32 +121,12 @@ def commandProcessor():
             speechEngine(time_response)
 
         elif 'weather' in command:  # Weather Handler
-            # set location
-            location = 'kampala'
-
-            # Weather finder
-            async def getWeather(location):
-                # Declare the client
-                client = python_weather.Client(format=python_weather.IMPERIAL)
-                weather = await client.find(location)
-                return weather.current.temperature
-                await client.close()
-
-            # Get weather    
-            try:
-                weather = asyncio.run(getWeather(location))
-
-                # convert weather to Celsius
-                weather_in_celsius = (weather - 32) * (5 / 9)
-
-                # Format weather output
-                weather_response = f'The weather is {round(weather_in_celsius, 1)} degrees celsius'
-
-                # Render response
-                speechEngine(weather_response)
-            except:
-                # Weather not found
-                speechEngine(f"Sorry! I couldn't find the weather data for {location}.")
+          
+            # Retrieve location
+           location = command.replace('what is the weather in', ' ').strip()
+           
+            # weather api code.
+            
 
         elif 'open' in command:  # Opens search platforms (YouTube, Wikipedia, Google)
             if 'youtube' in command:  # Opens YouTube
@@ -190,7 +167,7 @@ def commandProcessor():
             topic = replaced.strip()
             try:
                 speechEngine('just give me a sec!')
-                wiki = wikipedia.summary(topic, sentences=3)
+                wiki = wikipedia.summary(topic, sentences=2)
                 print(wiki)
                 speechEngine(wiki)
             except:
