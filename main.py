@@ -2,15 +2,15 @@ from tkinter import *
 import speech_recognition as sr
 from gtts import gTTS
 import playsound as pl
-from datetime import date, time
+from datetime import date, datetime, time
+import python_weather
 import warnings
 import wikipedia
 import pyjokes
 import webbrowser
 import platform
+import asyncio
 import os
-import requests
-import sys
 from minilib import *
 
 # ignore any warnings messages
@@ -38,7 +38,7 @@ def soundEngine():
             # Convert microphone data to text
             sound_to_text = listener.recognize_google(microphone_data)
         except sr.UnknownValueError:
-            speechEngine("Sorry i was a bit distracted there for a sec.Can you say that again please ?")
+            print("I didn't quite understand you. Can you say that again?")
 
         except sr.RequestError as e:
             print("Request Failed; {0}".format(e))
@@ -98,13 +98,13 @@ def commandProcessor():
 
         elif 'introduce' in command:
             intro = '''
-            My name is Anna. Your personal virtual assistant. I can help you with simple tasks like, checking the weather, date or time, 
+            My name is Anna, a virtual assistant to assist with any task as best I can.
             '''
             speechEngine(intro)
 
         elif 'your name' in command:
             intro = '''
-             I'm Leo, its a pleasure to meet you.
+             My name is Anna.
                        '''
             speechEngine(intro)
 
@@ -120,35 +120,28 @@ def commandProcessor():
 
         elif 'weather' in command:  # Weather Handler
             # set location
+            location = 'kampala'
 
-            new_var = command.split()
-            location = new_var[5]
+            # Weather finder
+            async def getWeather(location):
+                # Declare the client
+                client = python_weather.Client(format=python_weather.IMPERIAL)
+                weather = await client.find(location)
+                return weather.current.temperature
+                await client.close()
 
-            user_api = os.environ['OW_api_key']
-
-
-            complete_api_link = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + user_api
-            api_link = requests.get(complete_api_link)
-            api_data = api_link.json()
-
-
-            # Get weather
+            # Get weather    
             try:
+                weather = asyncio.run(getWeather(location))
 
+                # convert weather to Celsius
+                weather_in_celsius = (weather - 32) * (5 / 9)
 
-                #read api data
-
-                weather_desc = api_data['weather'][0]['description']
-                temp_city = ((api_data['main']['temp']) - 273.15)
-                hmdt = api_data['main']['humidity']
-                # wind_spd = api_data['wind']['speed']
-
-                weather_response = f'Its currently {weather_desc} and {(round(temp_city),1)} degrees celcius in {location} with a humidity of {hmdt} %'
+                # Format weather output
+                weather_response = f'The weather is {round(weather_in_celsius, 1)} degrees celsius'
 
                 # Render response
                 speechEngine(weather_response)
-            #except IndexError as E:
-                speechEngine("Can you please repeat that?")
             except:
                 # Weather not found
                 speechEngine(f"Sorry! I couldn't find the weather data for {location}.")
