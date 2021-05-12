@@ -12,6 +12,8 @@ import platform
 import requests
 import os
 
+
+
 # ignore any warnings messages
 warnings.filterwarnings('ignore')
 
@@ -118,6 +120,12 @@ def commandProcessor():
 
         elif "i'm fine" in command:
             speechEngine("that's great!how can i help you? ")
+            
+        elif "i am not fine" in command:
+            speechEngine("OOh that is not good, what is wrong?")
+            
+        elif "help" in command:
+            speechEngine("i sure can help you, talk to me please")
 
 
         elif 'date' in command:  # Date Handler
@@ -174,7 +182,9 @@ def commandProcessor():
                 speechEngine('Opening google search!')
                 webbrowser.open_new_tab('https://google.com/')
 
-        elif 'google' in command:
+        elif 'google' in command:#Opens google
+            speechEngine('Opening google!')
+            webbrowser.open_new_tab('https://www.google.com/')
 
             # Remove the google word from command
             filtered = command.replace('google', '')
